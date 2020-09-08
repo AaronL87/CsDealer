@@ -132,21 +132,21 @@ public class Tools
         List<int> foundIndicies = new List<int>();
         int count = 0;
 
+        if (term is string)
+        {
+            term = (string)term;
+        }
+        else if (term is char)
+        {
+            term = (char)term;
+        }
+        else
+        {
+            throw new ArgumentException($"The term {term} is not of type string or char.");
+        }
+        
         if (limit == 0)
         {
-            if (term is string)
-            {
-                term = (string)term;
-            }
-            else if (term is char)
-            {
-                term = (char)term;
-            }
-            else
-            {
-                throw new ArgumentException($"The term {term} is not of type string or char.");
-            }
-
             for (int i = 0; i < cards.Count; i++)
             {
                 if (CheckTerm(cards[i], term))
@@ -157,19 +157,6 @@ public class Tools
         }
         else
         {
-            if (term is string)
-            {
-                term = (string)term;
-            }
-            else if (term is char)
-            {
-                term = (char)term;
-            }
-            else
-            {
-                throw new ArgumentException($"The term {term} is not of type string or char.");
-            }
-
             for (int i = 0; i < cards.Count; i++)
             {
                 if (count < limit)
