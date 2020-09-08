@@ -254,12 +254,13 @@ public class Tools
                 for (int i = 0; i < cards.Count; i++)
                 { 
                     if (count < limit)
-                        
+                    {
                         if (CheckTerm(cards[i], term))
                         {
                             foundIndicies.Add(i);
                             count += 1;
                         }
+                    }    
                     else
                     {
                         break;
@@ -505,7 +506,7 @@ public class Tools
         return indices;
     }
 
-   
+
     public static List<Card> SortCards(List<Card> cards, 
         Dictionary<string, Dictionary<string, int>> ranks = null)
     {   
