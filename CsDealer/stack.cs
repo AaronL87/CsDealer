@@ -8,9 +8,9 @@ public class Stack
     // Stack Class
     //===============================================================================
  
-    public List<Card> _cards;
+    private List<Card> _cards;
     public Dictionary<string, Dictionary<string, int>> ranks;
-    public int _i;
+    private int _i;
     
     public Stack(List<Card> cards = null, bool sort = false,
         Dictionary<string, Dictionary<string, int>> ranks = null)
@@ -477,7 +477,7 @@ public class Stack
             }
             else if (term is string || term is char)
             {
-                indices = this.FindCard(term, limit: limit);
+                indices = this.Find(term, limit: limit);
                 tempIndices.Clear();
                 
                 foreach (int index in indices)
