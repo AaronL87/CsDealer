@@ -73,16 +73,13 @@ public class Stack
         }
         else
         {
-            throw new System.ArgumentException("Object on the right side of '+' must be of"
-                + " type Stack or Deck or be a list of Card instances");
+            throw new System.ArgumentException("Object on the right side of '+' must"
+                + " be of type Stack or Deck or be a list of Card instances");
         }
         
         return newStack;
     }
     
-
-
-
 
 /*
     def __contains__(self, card):
@@ -293,69 +290,22 @@ public class Stack
             return Stack(cards=dealt_cards)
         else:
             return Stack()
- 
-    def empty(self, return_cards=False):
-        """
-        Empties the stack, removing all cards from it, and returns them.
- 
-        :arg bool return_cards:
-            Whether or not to return the cards.
- 
-        :returns:
-            If ``return_cards=True``, a list containing the cards removed
-            from the Stack.
- 
-        """
-        cards = list(self.cards)
-        self.cards = []
- 
-        if return_cards:
-            return cards
- 
-    def find(self, term, limit=0, sort=False, ranks=None):
-        """
-        Searches the stack for cards with a value, suit, name, or
-        abbreviation matching the given argument, 'term'.
- 
-        :arg str term:
-            The search term. Can be a card full name, value, suit,
-            or abbreviation.
-        :arg int limit:
-            The number of items to retrieve for each term. ``0`` equals
-            no limit.
-        :arg bool sort:
-            Whether or not to sort the results.
-        :arg dict ranks:
-            The rank dict to reference for sorting. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            A list of stack indices for the cards matching the given terms,
-            if found.
- 
-        """
-        ranks = ranks or self.ranks
-        found_indices = []
-        count = 0
- 
-        if not limit:
-            for i, card in enumerate(self.cards):
-                if check_term(card, term):
-                    found_indices.append(i)
-        else:
-            for i, card in enumerate(self.cards):
-                if count < limit:
-                    if check_term(card, term):
-                        found_indices.append(i)
-                        count += 1
-                else:
-                    break
- 
-        if sort:
-            found_indices = sort_card_indices(self, found_indices, ranks)
- 
-        return found_indices
- 
+ */
+
+    public void Empty()
+    {
+        Cards = new List<Card>();
+    }
+
+    public List<Card> EmptyAndReturn()
+    {
+        List<Card> cards = Cards.ToList();
+        Cards = new List<Card>();
+        return cards;
+    }
+
+
+ /*
     def find_list(self, terms, limit=0, sort=False, ranks=None):
         """
         Searches the stack for cards with a value, suit, name, or
@@ -438,101 +388,176 @@ public class Stack
  
         return got_cards
  
-    def get_list(self, terms, limit=0, sort=False, ranks=None):
-        """
-        Get the specified cards from the stack.
- 
-        :arg term:
-            The search term. Can be a card full name, value, suit,
-            abbreviation, or stack indice.
-        :arg int limit:
-            The number of items to retrieve for each term.
-        :arg bool sort:
-            Whether or not to sort the results, by poker ranks.
-        :arg dict ranks:
-            The rank dict to reference for sorting. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            A list of the specified cards, if found.
- 
-        """
-        ranks = ranks or self.ranks
-        got_cards = []
- 
-        try:
-            indices = self.find_list(terms, limit=limit)
-            got_cards = [self.cards[i] for i in indices if self.cards[i]
-                not in got_cards]
-            self.cards = [v for i, v in enumerate(self.cards) if
-                i not in indices]
-        except:
-            indices = []
-            for item in terms:
-                try:
-                    card = self.cards[item]
-                    if card not in got_cards:
-                        got_cards.append(card)
-                        indices.append(item)
-                except:
-                    indices += self.find(item, limit=limit)
-                    got_cards += [self.cards[i] for i in indices if
-                        self.cards[i] not in got_cards]
-            self.cards = [v for i, v in enumerate(self.cards) if
-                i not in indices]
- 
-        if sort:
-            got_cards = sortCards(got_cards, ranks)
- 
-        return got_cards
- 
-    def insert(self, card, indice=-1):
-        """
-        Insert a given card into the stack at a given indice.
- 
-        :arg Card card:
-            The card to insert into the stack.
-        :arg int indice:
-            Where to insert the given card.
- 
-        """
-        self_size = len(self.cards)
- 
-        if indice in [0, -1]:
-            if indice == -1:
-                self.cards.append(card)
-            else:
-                self.cards.appendleft(card)
-        elif indice != self_size:
-            half_x, half_y = self.split(indice)
-            self.cards = list(half_x.cards) + [card] + list(half_y.cards)
- 
- 
-    def insert_list(self, cards, indice=-1):
-        """
-        Insert a list of given cards into the stack at a given indice.
- 
-        :arg list cards:
-            The list of cards to insert into the stack.
-        :arg int indice:
-            Where to insert the given cards.
- 
-        """
-        self_size = len(self.cards)
- 
-        if indice in [0, -1]:
-            if indice == -1:
-                self.cards += cards
-            else:
-                self.cards.extendleft(cards)
-        elif indice != self_size:
-            half_x, half_y = self.split(indice)
-            self.cards = list(half_x.cards) + list(cards) + list(half_y.cards)
- 
+
     */
+    public List<int> Find(object term, int limit = 0, bool sort = false,
+        Dictionary<string, Dictionary<string, int>> ranks = null)
+    {
+        List<Card> cards = Cards;
+        List<int> foundIndicies = new List<int>();
+        int count = 0;
+
+        if (term is string)
+        {
+            term = (string)term;
+        }
+        else if (term is char)
+        {
+            term = (char)term;
+        }
+        else
+        {
+            throw new ArgumentException($"The term {term} is not of type string or char.");
+        }
+        
+        if (limit == 0)
+        {
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (Tools.CheckTerm(cards[i], term))
+                {
+                    foundIndicies.Add(i);
+                }
+            }
+        }
+        else
+        {
+            for (int i = 0; i < cards.Count; i++)
+            {
+                if (count < limit)
+                    
+                    if (Tools.CheckTerm(cards[i], term))
+                    {
+                        foundIndicies.Add(i);
+                        count += 1;
+                    }
+                else
+                {
+                    break;
+                }
+            }
+        }
+
+        if (sort)
+        {
+            foundIndicies = Tools.SortCardIndicies(cards, foundIndicies, ranks);
+        }
+
+        return foundIndicies;
+    }
+    
+    
+    public Tuple<List<Card>,List<Card>> GetList(List<object> terms, int limit = 0, 
+        bool sort = false, Dictionary<string, Dictionary<string, int>> ranks = null)
+    // Has additional functionality that terms list can be mixed with indicies and card descriptions
+    {
+        List<Card> cards = Cards;
+        List<Card> gotCards = new List<Card>();
+        List<Card> remainingCards = new List<Card>();
+        List<int> indices = new List<int>();
+        List<int> allIndices = new List<int>();
+        List<int> tempIndices = new List<int>();
+        object term;
+
+        for (int t = 0; t < terms.Count; t++)
+        {
+            term = terms[t];
+            
+            if (term is int)
+            {
+                int index = (int)term;
+                
+                if (allIndices.Contains(index))
+                {
+                    continue;
+                }
+
+                gotCards.Add(cards[index]);
+                allIndices.Add(index);
+            }
+            else if (term is string || term is char)
+            {
+                indices = this.FindCard(term, limit: limit);
+                tempIndices.Clear();
+                
+                foreach (int index in indices)
+                {
+                    if (allIndices.Contains(index))
+                    {
+                        continue;
+                    }
+                    
+                    tempIndices.Add(index);
+                }
+
+                foreach (int index in tempIndices)
+                {
+                    gotCards.Add(cards[index]);
+                }
+
+                allIndices.AddRange(tempIndices);
+            }
+            else
+            {
+                throw new ArgumentException($"The term '{term}' in index {t} is not of type string," 
+                    + " char, or int.");
+            }
+        }
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (allIndices.Contains(i))
+            {
+                continue;
+            }
+
+            remainingCards.Add(cards[i]);
+        }
+
+        if (sort)
+        {
+            gotCards = Tools.SortCards(gotCards, ranks);
+        }
+
+        return Tuple.Create(remainingCards, gotCards);
+    }
 
 
-    public void Insert(List<Card> cards, int index = -1)
+    public void Insert(Card card, int index = -1)
+    {
+        int size = Size;
+
+        if (index < 0 && size + index >= 0)
+        {
+            index += size;
+        }
+        else if (index < 0 || index >= size)
+        {
+            throw new System.ArgumentException("Parameter 'index' must be between"
+                + $" {-size} and {size - 1}, inclusive.");
+        }
+
+        List<Card> cards = new List<Card>() {card};
+
+        if (index == size - 1)
+        {
+            Cards.AddRange(cards);
+        }
+        else if (index == 0)
+        {
+            Cards = cards.Concat(Cards) as List<Card>;
+        }
+        else
+        {
+            var splitCards = this.Split(index, false);
+            List<Card> beforeCards = splitCards.Item1.Cards;
+            List<Card> afterCards = splitCards.Item2.Cards;
+            Cards = beforeCards.Concat(cards).Concat(afterCards) as List<Card>;
+        }
+    }
+
+
+    public void InsertList(List<Card> cards, int index = -1)
     {
         int size = Size;
 
@@ -682,6 +707,7 @@ public class Stack
             return Tuple.Create(new Stack(cards: Cards), new Stack());
         }
     }
+
 
     //===============================================================================
     // Helper Functions
