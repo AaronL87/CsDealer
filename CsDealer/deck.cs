@@ -8,7 +8,7 @@ public class Deck : Stack
     // Deck Class
     //===============================================================================
  
-    public new List<Card> cards;
+    public new List<Card> _cards;
     public bool jokers;
     public int numJokers;
     public bool build;
@@ -17,7 +17,7 @@ public class Deck : Stack
     public new Dictionary<string, Dictionary<string, int>> ranks;
     public int decksUsed;
     
-    public Deck(object cards = null, bool jokers = false, int numJokers = 0, 
+    public Deck(List<Card> cards = null, bool jokers = false, int numJokers = 0, 
         bool build = true, bool rebuild = false, bool reshuffle = false,
         Dictionary<string, Dictionary<string, int>> ranks = null)
     {
@@ -31,7 +31,7 @@ public class Deck : Stack
             ranks = Const.DEFAULT_RANKS;
         }
         
-        this.cards = cards as List<Card>;
+        this._cards = cards;
         this.jokers = jokers;
         this.numJokers = numJokers;
         this.rebuild = rebuild;
@@ -54,34 +54,32 @@ public class Deck : Stack
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(deck.cards);
+            cardList.AddRange(deck.Cards);
             
-            Stack otherStack = (Stack)other;
-            cardList.AddRange(otherStack.cards);
+            cardList.AddRange(((Stack)other).Cards);
             
-            newDeck = new Deck(cards: (object)cardList);
+            newDeck = new Deck(cards: cardList);
         }
         else if (other is Deck)
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(deck.cards);
+            cardList.AddRange(deck.Cards);
             
-            Deck otherDeck = (Deck)other;
-            cardList.AddRange(otherDeck.cards);
+            cardList.AddRange(((Deck)other).Cards);
             
-            newDeck = new Deck(cards: (object)cardList);
+            newDeck = new Deck(cards: cardList);
         }
         else if (other is List<Card>)
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(deck.cards);
+            cardList.AddRange(deck.Cards);
             
             List<Card> otherCards = other as List<Card>;
             cardList.AddRange(otherCards);
             
-            newDeck = new Deck(cards: (object)cardList);
+            newDeck = new Deck(cards: cardList);
         }
         else
         {
@@ -193,7 +191,7 @@ public class Deck : Stack
     
     public static Deck ConvertToDeck(Stack stack)
     {
-        List<Card> cardStack = stack.cards;
+        List<Card> cardStack = stack.Cards;
 
         return new Deck(cardStack);
     }
