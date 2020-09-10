@@ -126,7 +126,7 @@ public class Tools
     }
 
 
-    public static List<int> FindCard(List<Card> cards, object term, int limit = 0,
+    public static List<int> Find(List<Card> cards, object term, int limit = 0,
         bool sort = false, Dictionary<string, Dictionary<string, int>> ranks = null)
     {
         List<int> foundIndicies = new List<int>();
@@ -283,7 +283,7 @@ public class Tools
         }
         else if (term is string || term is char)
         {
-            indices = FindCard(cards, term, limit: limit);
+            indices = Find(cards, term, limit: limit);
 
             foreach (int index in indices)
             {
@@ -343,7 +343,7 @@ public class Tools
             }
             else if (term is string || term is char)
             {
-                indices = FindCard(cards, term, limit: limit);
+                indices = Find(cards, term, limit: limit);
                 tempIndices.Clear();
                 
                 foreach (int index in indices)
