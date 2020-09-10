@@ -255,47 +255,58 @@ public class Stack
         }
     }
 
-    /*
-    def deal(self, num=1, end=TOP):
-        """
-        Returns a list of cards, which are removed from the Stack.
- 
-        :arg int num:
-            The number of cards to deal.
-        :arg str end:
-            Which end to deal from. Can be ``0`` (top) or ``1`` (bottom).
- 
-        :returns:
-            The given number of cards from the stack.
- 
-        """
-        ends = {TOP: self.cards.pop, BOTTOM: self.cards.popleft}
- 
-        self_size = self.size
- 
-        if num <= self_size:
-            dealt_cards = [None] * num
-        else:
-            num = self_size
-            dealt_cards = [None] * self_size
- 
-        if self_size:
-            for n in xrange(num):
-                try:
-                    card = ends[end]()
-                    dealt_cards[n] = card
-                except:
-                    break
- 
-            return Stack(cards=dealt_cards)
-        else:
-            return Stack()
- */
+    
+    public Stack Deal(int num = 1, string end = Const.TOP)
+    {
+        if (num <= 0)
+        {
+            throw new System.ArgumentException("The 'num' parameter must be >= 1.");
+        }
+        
+        List<Card> dealtCards = new List<Card>();
+        int size = Size;
+        Card card;
+
+        if (size != 0)
+        {
+            for (int n = 0; n < num; n++)
+            {
+                try
+                {
+                    if (end == Const.TOP)
+                    {
+                        card = Cards[0];
+                        Cards.RemoveAt(0);
+                    }
+                    else
+                    {
+                        card = Cards[-1];
+                        Cards.RemoveAt(-1);
+                    }
+
+                    dealtCards[n] = card;
+                    num -= 1;
+                }
+                catch (System.IndexOutOfRangeException)
+                {
+                    break;
+                }     
+            }
+        
+            return new Stack(cards: dealtCards);
+        }
+        else
+        {
+            return new Stack();
+        }
+    }
+
 
     public void Empty()
     {
         Cards = new List<Card>();
     }
+
 
     public List<Card> EmptyAndReturn()
     {
@@ -707,7 +718,6 @@ public class Stack
             return Tuple.Create(new Stack(cards: Cards), new Stack());
         }
     }
-
 
     //===============================================================================
     // Helper Functions
