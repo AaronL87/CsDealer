@@ -8,7 +8,7 @@ public class Stack
     // Stack Class
     //===============================================================================
  
-    public List<Card> cards;
+    public List<Card> _cards;
     public Dictionary<string, Dictionary<string, int>> ranks;
     public int _i;
     
@@ -25,7 +25,7 @@ public class Stack
             ranks = Const.DEFAULT_RANKS;
         }
         
-        this.cards = cards;
+        this._cards = cards;
         this.ranks = ranks;
         this._i = 0; // What is this for?
 
@@ -44,10 +44,9 @@ public class Stack
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(stack.cards);
+            cardList.AddRange(stack.Cards);
             
-            Stack otherStack = (Stack)other;
-            cardList.AddRange(otherStack.cards);
+            cardList.AddRange(((Stack)other).Cards);
             
             newStack = new Stack(cards: cardList);
         }
@@ -55,10 +54,9 @@ public class Stack
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(stack.cards);
+            cardList.AddRange(stack.Cards);
             
-            Deck otherDeck = (Deck)other;
-            cardList.AddRange(otherDeck.cards);
+            cardList.AddRange(((Deck)other).Cards);
             
             newStack = new Stack(cards: cardList);
         }
@@ -66,7 +64,7 @@ public class Stack
         {
             List<Card> cardList = new List<Card>();
             
-            cardList.AddRange(stack.cards);
+            cardList.AddRange(stack.Cards);
             
             List<Card> otherCards = other as List<Card>;
             cardList.AddRange(otherCards);
@@ -82,7 +80,10 @@ public class Stack
         return newStack;
     }
     
-    
+
+
+
+
 /*
     def __contains__(self, card):
         """
@@ -249,11 +250,11 @@ public class Stack
     {
         get
         {
-            return this.cards;
+            return this._cards;
         }
         set
         {
-            this.cards = value;
+            this._cards = value;
         }
     }
 
@@ -528,77 +529,76 @@ public class Stack
             half_x, half_y = self.split(indice)
             self.cards = list(half_x.cards) + list(cards) + list(half_y.cards)
  
- 
-    def is_sorted(self, ranks=None):
-        """
-        Checks whether the stack is sorted.
- 
-        :arg dict ranks:
-            The rank dict to reference for checking. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            Whether or not the cards are sorted.
- 
-        """
-        ranks = ranks or self.ranks
- 
-        return check_sorted(self, ranks)
- 
-    def open_cards(self, filename=None):
-        """
-        Open cards from a txt file.
- 
-        :arg str filename:
-            The filename of the deck file to open. If no filename given,
-            defaults to "cards-YYYYMMDD.txt", where "YYYYMMDD" is the year,
-            month, and day. For example, "cards-20140711.txt".
- 
-        """
-        self.cards = open_cards(filename)
- 
-    def random_card(self, remove=False):
-        """
-        Returns a random card from the Stack. If ``remove=True``, it will
-        also remove the card from the deck.
- 
-        :arg bool remove:
-            Whether or not to remove the card from the deck.
- 
-        :returns:
-            A random Card object, from the Stack.
- 
-        """
-        return random_card(self, remove)
- 
-    def reverse(self):
-        """Reverse the order of the Stack in place."""
- 
-        self.cards = self[::-1]
- 
-    def save_cards(self, filename=None):
-        """
-        Save the current stack contents, in plain text, to a txt file.
- 
-        :arg str filename:
-            The filename to use for the file. If no filename given, defaults
-            to "cards-YYYYMMDD.txt", where "YYYYMMDD" is the year, month, and
-            day. For example, "cards-20140711.txt".
- 
-        """
-        save_cards(self, filename)
- 
-    def set_cards(self, cards):
-        """
-        Change the Deck's current contents to the given cards.
- 
-        :arg list cards:
-            The Cards to assign to the stack.
- 
-        """
-        self.cards = cards
- 
     */
+
+
+    public void Insert(List<Card> cards, int index = -1)
+    {
+        int size = Size;
+
+        if (index < 0 && size + index >= 0)
+        {
+            index += size;
+        }
+        else if (index < 0 || index >= size)
+        {
+            throw new System.ArgumentException("Parameter 'index' must be between"
+                + $" {-size} and {size - 1}, inclusive.");
+        }
+
+        if (index == size - 1)
+        {
+            Cards.AddRange(cards);
+        }
+        else if (index == 0)
+        {
+            Cards = cards.Concat(Cards) as List<Card>;
+        }
+        else
+        {
+            var splitCards = this.Split(index, false);
+            List<Card> beforeCards = splitCards.Item1.Cards;
+            List<Card> afterCards = splitCards.Item2.Cards;
+            Cards = beforeCards.Concat(cards).Concat(afterCards) as List<Card>;
+        }
+    }
+
+
+    public bool IsSorted(Dictionary<string, Dictionary<string, int>> ranks = null)
+    {
+        if (ranks == null)
+        {
+            ranks = this.ranks;
+        }
+
+        return Tools.CheckSorted(Cards, ranks);
+    }
+    
+
+    public void OpenCards(string filename = null)
+    {
+        Cards = Tools.OpenCards(filename);
+    }
+
+
+    public Card RandomCard(bool remove_ = false)
+    {
+        return Tools.RandomCard(Cards, remove_);
+    }
+
+
+    public void Reverse()
+    {
+        Cards.Reverse();
+    }
+
+
+    public void SaveCards(string filename = null)
+    {
+        Tools.SaveCards(Cards, filename);
+    }
+
+
     private static Random random = new Random();
 
     public void Shuffle(int times = 1)
@@ -626,78 +626,7 @@ public class Stack
         }
     }
 
-    /*
- 
-    @property
-    def size(self):
-        """
-        Counts the number of cards currently in the stack.
- 
-        :returns:
-            The number of cards in the stack.
- 
-        """
-        return len(self.cards)
- 
-    def sort(self, ranks=None):
-        """
-        Sorts the stack, either by poker ranks, or big two ranks.
- 
-        :arg dict ranks:
-            The rank dict to reference for sorting. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            The sorted cards.
- 
-        """
-        ranks = ranks or self.ranks
-        self.cards = sortCards(self.cards, ranks)
- 
-    def split(self, indice=None):
-        """
-        Splits the Stack, either in half, or at the given indice, into two
-        separate Stacks.
- 
-        :arg int indice:
-            Optional. The indice to split the Stack at. Defaults to the middle
-            of the ``Stack``.
- 
-        :returns:
-            The two parts of the Stack, as separate Stack instances.
- 
-        """
-        self_size = self.size
-        if self_size > 1:
-            if not indice:
-                mid = self_size // 2
-                return Stack(cards=self[0:mid]), Stack(cards=self[mid::])
-            else:
-                return Stack(cards=self[0:indice]), Stack(cards=self[indice::])
-        else:
-            return Stack(cards=self.cards), Stack()
- 
- 
-#===============================================================================
-# Helper Functions
-#===============================================================================
- 
-def convert_to_stack(deck):
-    """
-    Convert a ``Deck`` to a ``Stack``.
- 
-    :arg Deck deck:
-        The ``Deck`` to convert.
- 
-    :returns:
-        A new ``Stack`` instance, containing the cards from the given ``Deck``
-        instance.
- 
-    """
-    return Stack(list(deck.cards))
-
-    */
-
+    
     public void Sort(Dictionary<string, Dictionary<string, int>> ranks = null)
     {
         if (ranks == null)
@@ -706,5 +635,60 @@ def convert_to_stack(deck):
         }
 
         Cards = Tools.SortCards(Cards, ranks);
+    }
+
+
+    public Tuple<Stack,Stack> Split(int index = 0, bool halve = true) 
+    // Extra parameter solves some issues. Also, method incorporates negative indicies.
+    {
+        int size = Size;
+        
+        if (size > 1)
+        {
+            if (index < 0 && size + index >= 0)
+            {
+                index += size;
+            }
+            else if (index < 0 || index >= size)
+            {
+                throw new System.ArgumentException("Parameter 'index' must be between"
+                    + $" {-size} and {size - 1}, inclusive.");
+            }
+
+            if (index == 0 && halve == true)
+            {
+                int mid;
+                
+                if (size % 2 == 0)
+                {
+                    mid = size / 2;
+                }
+                else
+                {
+                    mid = (size - 1) / 2;
+                }
+                
+                return Tuple.Create(new Stack(cards: Cards.GetRange(0, mid - 1)), 
+                    new Stack(cards: Cards.GetRange(mid, size - mid - 1)));
+            }
+            else
+            {
+                return Tuple.Create(new Stack(cards: Cards.GetRange(0, index - 1)), 
+                    new Stack(cards: Cards.GetRange(index, size - index - 1)));
+            }
+        }
+        else
+        {
+            return Tuple.Create(new Stack(cards: Cards), new Stack());
+        }
+    }
+
+    //===============================================================================
+    // Helper Functions
+    //===============================================================================
+
+    public static Stack ConvertToStack(Deck deck)
+    {
+        return new Stack(deck.Cards);
     }
 }
