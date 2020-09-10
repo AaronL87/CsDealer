@@ -8,7 +8,7 @@ public class Deck : Stack
     // Deck Class
     //===============================================================================
  
-    public new List<Card> _cards;
+    private List<Card> _cards;
     public bool jokers;
     public int numJokers;
     public bool build;
@@ -149,7 +149,6 @@ public class Deck : Stack
                 {
                     card = Cards[0];
                     Cards.RemoveAt(0);
-
                 }
                 else
                 {
@@ -183,7 +182,6 @@ public class Deck : Stack
         
         return new Stack(cards: dealtCards);
     }
-
 
     //===============================================================================
     // Helper Functions
