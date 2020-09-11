@@ -10,7 +10,6 @@ public class Stack
  
     private List<Card> _cards;
     public Dictionary<string, Dictionary<string, int>> ranks;
-    private int _i;
     
     public Stack(List<Card> cards = null, bool sort = false,
         Dictionary<string, Dictionary<string, int>> ranks = null)
@@ -27,7 +26,6 @@ public class Stack
         
         this._cards = cards;
         this.ranks = ranks;
-        this._i = 0; // What is this for?
 
         if (sort)
         {
@@ -36,11 +34,11 @@ public class Stack
     }
 
 
-    public static Stack operator+ (Stack stack, object other)
+    public static Stack operator +(Stack stack, object other)
     {
         Stack newStack;
 
-        if (other is Stack)
+        if (other.GetType() == typeof(Stack))
         {
             List<Card> cardList = new List<Card>();
             
@@ -50,7 +48,7 @@ public class Stack
             
             newStack = new Stack(cards: cardList);
         }
-        else if (other is Deck)
+        else if (other.GetType() == typeof(Deck))
         {
             List<Card> cardList = new List<Card>();
             
@@ -79,52 +77,121 @@ public class Stack
         
         return newStack;
     }
+
+
+    public bool Contains(Card card)
+    {
+        List<string> reprList = new List<string>();
+        List<Card> cards = Cards;
+
+        foreach (Card c in cards)
+        {
+            reprList.Add(c.Repr());
+        }
+        
+        return reprList.Contains(card.Repr());
+    }
     
 
-/*
-    def __contains__(self, card):
-        """
-        Allows for Card instance (not value & suit) inclusion checks.
- 
-        :arg Card card:
-            The Card instance to check for.
- 
-        :returns:
-            Whether or not the Card instance is in the Deck.
- 
-        """
-        return id(card) in [id(x) for x in self.cards]
- 
-    def __delitem__(self, indice):
-        """
-        Allows for deletion of a Card instance, using del.
- 
-        :arg int indice:
-            The indice to delete.
- 
-        """
-        del self.cards[indice]
- 
-    def __eq__(self, other):
-        """
-        Allows for Stack comparisons. Checks to see if the given ``other``
-        contains the same cards, in the same order (based on value & suit,
-        not instance).
- 
-        :arg other:
-            The other ``Stack``/``Deck`` instance or ``list`` to compare to.
- 
-        :returns:
-            ``True`` or ``False``.
- 
-        """
-        if len(self.cards) == len(other):
-            for i, card in enumerate(self.cards):
-                if card != other[i]:
-                    return False
-            return True
-        else:
-            return False
+    public void Del(int index) // In place of Python's Del
+    {
+        Cards.RemoveAt(index);
+    }
+
+
+    public static bool operator ==(Stack leftStack, object rightObj)
+    {
+        return leftStack.Equals(rightObj);
+    }
+
+
+    public static bool operator !=(Stack leftStack, object rightObj)
+    {   
+        return !(leftStack.Equals(rightObj)); 
+    }
+
+
+    public bool Equals(object rightObj)
+    {   
+        List<Card> leftCards = Cards;
+        List<Card> rightCards;
+        
+        if (rightObj.GetType() == typeof(Stack))
+        {
+            Stack rightCasted = (Stack)rightObj;
+
+            if (this.Size == rightCasted.Size)
+            {
+                leftCards = this.Cards;
+                rightCards = rightCasted.Cards;
+                
+                for (int i = 0; i < this.Size; i++)
+                {
+                    if (leftCards[i] != rightCards[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (rightObj.GetType() == typeof(Deck))
+        {
+            Deck rightCasted = (Deck)rightObj;
+
+            if (this.Size == rightCasted.Size)
+            {
+                leftCards = this.Cards;
+                rightCards = rightCasted.Cards;
+                
+                for (int i = 0; i < this.Size; i++)
+                {
+                    if (leftCards[i] != rightCards[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if (rightObj is List<Card>)
+        {
+            leftCards = this.Cards;
+            rightCards = rightObj as List<Card>;
+
+            if (this.Size == rightCards.Count)
+            {
+                for (int i = 0; i < this.Size; i++)
+                {
+                    if (leftCards[i] != rightCards[i])
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+/* 
  
     def __getitem__(self, key):
         """
@@ -159,27 +226,6 @@ public class Stack
  
         """
         return len(self.cards)
- 
-    def __ne__(self, other):
-        """
-        Allows for Stack comparisons. Checks to see if the given ``other``
-        does not contain the same cards, in the same order (based on value &
-        suit, not instance).
- 
-        :arg other:
-            The other ``Stack``/``Deck`` instance or ``list`` to compare to.
- 
-        :returns:
-            ``True`` or ``False``.
- 
-        """
-        if len(self.cards) == len(other):
-            for i, card in enumerate(self.cards):
-                if card != other[i]:
-                    return True
-            return False
-        else:
-            return True
  
     def __repr__(self):
         """
@@ -218,30 +264,49 @@ public class Stack
         card_names = "".join([x.name + "\n" for x in self.cards]).rstrip("\n")
         return "%s" % (card_names)
  
-    def add(self, cards, end=TOP):
-        """
-        Adds the given list of ``Card`` instances to the top of the stack.
- 
-        :arg cards:
-            The cards to add to the ``Stack``. Can be a single ``Card``
-            instance, or a ``list`` of cards.
-        :arg str end:
-            The end of the ``Stack`` to add the cards to. Can be ``TOP`` ("top")
-            or ``BOTTOM`` ("bottom").
- 
-        """
-        if end is TOP:
-            try:
-                self.cards += cards
-            except:
-                self.cards += [cards]
-        elif end is BOTTOM:
-            try:
-                self.cards.extendleft(cards)
-            except:
-                self.cards.extendleft([cards])
- 
+    
     */
+    
+    
+    public void Add(object cards, string end = Const.TOP)
+    {
+        Exception e = new System.ArgumentException("The 'end' parameter must be either"
+            + $" {Const.TOP} or {Const.BOTTOM}");
+        
+        if (cards is Card)
+        {
+            if (end == Const.TOP) // Used == not 'is'
+            {
+                Cards.Insert(0, (Card)cards); // Flipped TOP and BOTTOM from PyDealer
+            }
+            else if (end == Const.BOTTOM)
+            {
+                Cards.Add((Card)cards);
+            }
+            else
+            {
+                throw e;
+            }
+        }
+        else if (cards is List<Card>)
+        {
+            List<Card> cardList = cards as List<Card>;
+
+            if (end == Const.TOP) // Used == not 'is'
+            {
+                Cards = cardList.Concat(Cards) as List<Card>;
+            }
+            else if (end == Const.BOTTOM)
+            {
+                Cards.AddRange(cardList);
+            }
+            else
+            {
+                throw e;
+            }
+        }
+    }
+
 
     public List<Card> Cards
     {
@@ -316,91 +381,142 @@ public class Stack
     }
 
 
- /*
-    def find_list(self, terms, limit=0, sort=False, ranks=None):
-        """
-        Searches the stack for cards with a value, suit, name, or
-        abbreviation matching the given argument, 'terms'.
- 
-        :arg list terms:
-            The search terms. Can be card full names, suits, values,
-            or abbreviations.
-        :arg int limit:
-            The number of items to retrieve for each term.
-        :arg bool sort:
-            Whether or not to sort the results, by poker ranks.
-        :arg dict ranks:
-            The rank dict to reference for sorting. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            A list of stack indices for the cards matching the given terms,
-            if found.
- 
-        """
-        ranks = ranks or self.ranks
-        found_indices = []
-        count = 0
- 
-        if not limit:
-            for term in terms:
-                for i, card in enumerate(self.cards):
-                    if check_term(card, term) and i not in found_indices:
-                        found_indices.append(i)
-        else:
-            for term in terms:
-                for i, card in enumerate(self.cards):
-                    if count < limit:
-                        if check_term(card, term) and i not in found_indices:
-                            found_indices.append(i)
-                            count += 1
-                    else:
-                        break
-                count = 0
- 
-        if sort:
-            found_indices = sort_card_indices(self, found_indices, ranks)
- 
-        return found_indices
- 
-    def get(self, term, limit=0, sort=False, ranks=None):
-        """
-        Get the specified card from the stack.
- 
-        :arg term:
-            The search term. Can be a card full name, value, suit,
-            abbreviation, or stack indice.
-        :arg int limit:
-            The number of items to retrieve for each term.
-        :arg bool sort:
-            Whether or not to sort the results, by poker ranks.
-        :arg dict ranks:
-            The rank dict to reference for sorting. If ``None``, it will
-            default to ``DEFAULT_RANKS``.
- 
-        :returns:
-            A list of the specified cards, if found.
- 
-        """
-        ranks = ranks or self.ranks
-        got_cards = []
- 
-        try:
-            indices = self.find(term, limit=limit)
-            got_cards = [self.cards[i] for i in indices]
-            self.cards = [v for i, v in enumerate(self.cards) if
-                i not in indices]
-        except:
-            got_cards = [self.cards[term]]
-            self.cards = [v for i, v in enumerate(self.cards) if i is not term]
- 
-        if sort:
-            got_cards = sortCards(got_cards, ranks)
- 
-        return got_cards
- 
+    public List<int> FindList(List<object> terms, int limit = 0, bool sort = false,
+        Dictionary<string, Dictionary<string, int>> ranks = null)
+    {
+        List<Card> cards = Cards;
+        List<int> foundIndicies = new List<int>();
+        int count = 0;
+        object term;
 
-    */
+        if (limit == 0)
+        {
+            for (int t = 0; t < terms.Count; t++)
+            {
+                term = terms[t];
+
+                if (term is string)
+                {
+                    term = (string)term;
+                }
+                else if (term is char)
+                {
+                    term = (char)term;
+                }
+                else
+                {
+                    throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
+                        + " is not of type string or char.");
+                }
+                
+                for (int i = 0; i < cards.Count; i++)
+                {   
+                    if (Tools.CheckTerm(cards[i], term))
+                    {
+                        foundIndicies.Add(i);
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (int t = 0; t < terms.Count; t++)
+            {
+                term = terms[t];
+            
+                if (term is string)
+                {
+                    term = (string)term;
+                }
+                else if (term is char)
+                {
+                    term = (char)term;
+                }
+                else
+                {
+                    throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
+                        + " is not of type string or char.");
+                }
+                
+                for (int i = 0; i < cards.Count; i++)
+                { 
+                    if (count < limit)
+                    {
+                        if (Tools.CheckTerm(cards[i], term))
+                        {
+                            foundIndicies.Add(i);
+                            count += 1;
+                        }
+                    }    
+                    else
+                    {
+                        break;
+                    }
+                }
+            
+                count = 0;
+            }
+        }
+
+        if (sort)
+        {
+            foundIndicies = Tools.SortCardIndicies(cards, foundIndicies, ranks);
+        }
+
+        return foundIndicies;
+    }
+
+
+    public List<Card> Get(object term, int limit = 0, bool sort = false,
+        Dictionary<string, Dictionary<string, int>> ranks = null)
+    {
+        List<Card> cards = Cards;
+        List<Card> gotCards = new List<Card>();
+        List<Card> remainingCards = new List<Card>();
+        List<int> indices = new List<int>();
+
+        if (term is int)
+        {
+            int index = (int)term;
+            gotCards.Add(cards[index]);
+
+            indices.Add(index);
+        }
+        else if (term is string || term is char)
+        {
+            indices = Tools.Find(cards, term, limit: limit);
+
+            foreach (int index in indices)
+            {
+                gotCards.Add(cards[index]);
+            }
+        }
+        else
+        {
+            throw new ArgumentException($"The term '{term}' is not of type string, char, or int.");
+        }
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            if (indices.Contains(i))
+            {
+                continue;
+            }
+
+            remainingCards.Add(cards[i]);
+        }
+
+        Cards = remainingCards;
+        
+        if (sort)
+        {
+            gotCards = Tools.SortCards(gotCards);
+        }
+
+        return gotCards;
+    }
+
+
     public List<int> Find(object term, int limit = 0, bool sort = false,
         Dictionary<string, Dictionary<string, int>> ranks = null)
     {
@@ -534,7 +650,7 @@ public class Stack
     }
 
 
-    public void Insert(Card card, int index = -1)
+    public void InsertCard(Card card, int index = -1)
     {
         int size = Size;
 
