@@ -50,7 +50,7 @@ public class Deck : Stack
     {
         Deck newDeck;
 
-        if (other is Stack)
+        if (other.GetType() == typeof(Stack))
         {
             List<Card> cardList = new List<Card>();
             
@@ -60,7 +60,7 @@ public class Deck : Stack
             
             newDeck = new Deck(cards: cardList);
         }
-        else if (other is Deck)
+        else if (other.GetType() == typeof(Deck))
         {
             List<Card> cardList = new List<Card>();
             
