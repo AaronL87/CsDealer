@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public class Stack
 {
@@ -111,7 +112,7 @@ public class Stack
     }
 
 
-    public bool Equals(object rightObj)
+    public override bool Equals(object rightObj)
     {   
         List<Card> leftCards = Cards;
         List<Card> rightCards;
@@ -191,82 +192,31 @@ public class Stack
             return false;
         }
     }
-/* 
- 
-    def __getitem__(self, key):
-        """
-        Allows for accessing, and slicing of cards, using ``Deck[indice]``,
-        ``Deck[start:stop]``, etc.
- 
-        :arg int indice:
-            The indice to get.
- 
-        :returns:
-            The ``Card`` at the given indice.
- 
-        """
-        self_len = len(self)
-        if isinstance(key, slice):
-            return [self[i] for i in xrange(*key.indices(self_len))]
-        elif isinstance(key, int):
-            if key < 0 :
-                key += self_len
-            if key >= self_len:
-                raise IndexError("The index ({}) is out of range.".format(key))
-            return self.cards[key]
-        else:
-            raise TypeError("Invalid argument type.")
- 
-    def __len__(self):
-        """
-        Allows check the Stack length, with len.
- 
-        :returns:
-            The length of the stack (self.cards).
- 
-        """
-        return len(self.cards)
- 
-    def __repr__(self):
-        """
-        The repr magic method.
- 
-        :returns:
-            A representation of the ``Deck`` instance.
- 
-        """
-        return "Stack(cards=%r)" % (self.cards)
- 
-    def __setitem__(self, indice, value):
-        """
-        Assign cards to specific stack indices, like a list.
- 
-        Example:
-            stack[16] = card_object
- 
-        :arg int indice:
-            The indice to set.
-        :arg Card value:
-            The Card to set the indice to.
- 
-        """
-        self.cards[indice] = value
- 
-    def __str__(self):
-        """
-        Allows users to print a human readable representation of the ``Stack``
-        instance, using ``print``.
- 
-        :returns:
-            A str of the names of the cards in the stack.
- 
-        """
-        card_names = "".join([x.name + "\n" for x in self.cards]).rstrip("\n")
-        return "%s" % (card_names)
- 
-    
-    */
-    
+
+
+    public string Repr()
+    {
+        return $"Stack(cards={Cards})";
+    }
+
+
+    public string Str()
+    {
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < Cards.Count; i++)
+        {
+            sb.Append($"{Cards[i].value} {Cards[i].suit}");
+            
+            if (i != Cards.Count - 1)
+            {
+                sb.Append(Environment.NewLine);
+            }
+        }
+        
+        return sb.ToString();
+    }
+
     
     public void Add(object cards, string end = Const.TOP)
     {
