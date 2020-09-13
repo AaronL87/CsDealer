@@ -46,7 +46,7 @@ public class Deck : Stack
     }
 
 
-    public static Deck operator+ (Deck deck, object other)
+    public static Deck operator +(Deck deck, object other)
     {
         Deck newDeck;
 
@@ -91,7 +91,7 @@ public class Deck : Stack
     }
 
 
-    public string Repr()
+    public new string Repr()
     {
         return $"Deck(cards={Cards})";
     }
