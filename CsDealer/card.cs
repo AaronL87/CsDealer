@@ -23,19 +23,19 @@ public class Card
     }
  
     
-    public static bool operator== (Card leftCard, Card rightCard)
+    public static bool operator ==(Card leftCard, Card rightCard)
     {
         return leftCard.value == rightCard.value && leftCard.suit == rightCard.suit;
     }
 
 
-    public static bool operator!= (Card leftCard, Card rightCard)
+    public static bool operator !=(Card leftCard, Card rightCard)
     {
         return leftCard.value != rightCard.value || leftCard.suit != rightCard.suit;
     }
 
 
-    public static bool operator>= (Card leftCard, Card rightCard)
+    public static bool operator >=(Card leftCard, Card rightCard)
     {
         return Const.DEFAULT_RANKS["values"][leftCard.value] > Const.DEFAULT_RANKS["values"][rightCard.value]
             || (
@@ -46,7 +46,7 @@ public class Card
     }
 
 
-    public static bool operator> (Card leftCard, Card rightCard)
+    public static bool operator >(Card leftCard, Card rightCard)
     {
         return Const.DEFAULT_RANKS["values"][leftCard.value] > Const.DEFAULT_RANKS["values"][rightCard.value]
             || (
@@ -57,7 +57,7 @@ public class Card
     }
 
 
-    public static bool operator<= (Card leftCard, Card rightCard)
+    public static bool operator <=(Card leftCard, Card rightCard)
     {
         return Const.DEFAULT_RANKS["values"][leftCard.value] < Const.DEFAULT_RANKS["values"][rightCard.value]
             || (
@@ -68,7 +68,7 @@ public class Card
     }
 
 
-    public static bool operator< (Card leftCard, Card rightCard)
+    public static bool operator <(Card leftCard, Card rightCard)
     {
         return Const.DEFAULT_RANKS["values"][leftCard.value] < Const.DEFAULT_RANKS["values"][rightCard.value]
             || (
@@ -284,7 +284,6 @@ public class Card
         }
     }
 
-
     //===============================================================================
     // Helper Functions
     //===============================================================================
@@ -317,5 +316,4 @@ public class Card
             return $"{value} of {suit}";
         }
     }
-
 }
