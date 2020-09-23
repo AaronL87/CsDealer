@@ -99,6 +99,19 @@ public class Card
     }
 
 
+    public override bool Equals(object card)
+    {
+        if (card is Card)
+        {
+            return this.value == ((Card)card).value && this.suit == ((Card)card).suit;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
     public bool Equals(object other, Dictionary<string, Dictionary<string, int>> ranks = null)
     {
         if (ranks == null)

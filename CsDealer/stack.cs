@@ -194,6 +194,12 @@ public class Stack
     }
 
 
+    public override int GetHashCode()
+    {
+        return Cards.GetHashCode();
+    }
+
+
     public string Repr()
     {
         return $"Stack(cards={Cards})";
