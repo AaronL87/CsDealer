@@ -304,9 +304,8 @@ public class Stack
                         card = Cards[-1];
                         Cards.RemoveAt(-1);
                     }
-
-                    dealtCards[n] = card;
-                    num -= 1;
+                    
+                    dealtCards.Add(card);
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -361,8 +360,8 @@ public class Stack
                 }
                 else
                 {
-                    throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
-                        + " is not of type string or char.");
+                    throw new ArgumentException($"The term '{term}' in the {t} index in" 
+                        + " 'terms' list is not of type string or char.");
                 }
                 
                 for (int i = 0; i < cards.Count; i++)
@@ -390,8 +389,8 @@ public class Stack
                 }
                 else
                 {
-                    throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
-                        + " is not of type string or char.");
+                    throw new ArgumentException($"The term '{term}' in the {t} index in" 
+                        + " 'terms' list is not of type string or char.");
                 }
                 
                 for (int i = 0; i < cards.Count; i++)

@@ -14,10 +14,18 @@ public class Card
     public string name;
     
     public Card(string value, string suit)
-    {
-        this.value = value.ToUpper();
-        this.suit = suit.ToUpper();
+    {   
+        this.value = char.ToUpper(value[0]) + value.Substring(1).ToLower();
         
+        if (suit != null)
+        {
+            this.suit = char.ToUpper(suit[0]) + suit.Substring(1).ToLower();
+        }
+        else
+        {
+            this.suit = suit;
+        }
+
         this.abbrev = CardAbbrev(this.value, this.suit);
         this.name = CardName(this.value, this.suit);
     }

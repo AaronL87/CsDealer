@@ -160,7 +160,6 @@ public class Tools
             for (int i = 0; i < cards.Count; i++)
             {
                 if (count < limit)
-                    
                     if (CheckTerm(cards[i], term))
                     {
                         foundIndicies.Add(i);
