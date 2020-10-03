@@ -276,6 +276,12 @@ public class Tools
         if (term is int)
         {
             int index = (int)term;
+
+            if (index < 0)
+            {
+                index += cards.Count;
+            }
+
             gotCards.Add(cards[index]);
 
             indices.Add(index);
@@ -332,6 +338,11 @@ public class Tools
             {
                 int index = (int)term;
                 
+                if (index < 0)
+                {
+                    index += cards.Count;
+                }
+                
                 if (allIndices.Contains(index))
                 {
                     continue;
@@ -346,7 +357,7 @@ public class Tools
                 tempIndices.Clear();
                 
                 foreach (int index in indices)
-                {
+                {                            
                     if (allIndices.Contains(index))
                     {
                         continue;

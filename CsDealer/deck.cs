@@ -152,8 +152,8 @@ public class Deck : Stack
                 }
                 else
                 {
-                    card = Cards[-1];
-                    Cards.RemoveAt(-1);
+                    card = Cards[Size - 1];
+                    Cards.RemoveAt(Size - 1);
                 }
 
                 dealtCards[n] = card;

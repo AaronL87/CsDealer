@@ -96,6 +96,11 @@ public class Stack
 
     public void Del(int index) // In place of Python's Del
     {
+        if (index < 0)
+        {
+            index += Size;
+        }
+        
         Cards.RemoveAt(index);
     }
 
@@ -301,8 +306,8 @@ public class Stack
                     }
                     else
                     {
-                        card = Cards[-1];
-                        Cards.RemoveAt(-1);
+                        card = Cards[size - 1];
+                        Cards.RemoveAt(size - 1);
                     }
                     
                     dealtCards.Add(card);
@@ -433,6 +438,12 @@ public class Stack
         if (term is int)
         {
             int index = (int)term;
+
+            if (index < 0)
+            {
+                index += cards.Count;
+            }
+
             gotCards.Add(cards[index]);
 
             indices.Add(index);
@@ -548,6 +559,11 @@ public class Stack
             if (term is int)
             {
                 int index = (int)term;
+
+                if (index < 0)
+                {
+                    index += cards.Count;
+                }
                 
                 if (allIndices.Contains(index))
                 {
