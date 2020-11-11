@@ -123,7 +123,7 @@ public class Deck : Stack
             throw new System.ArgumentException("The 'num' parameter must be >= 1.");
         }
         
-        List<Card> dealtCards = new List<Card>();
+        Card[] dealtCards = new Card[num];
         int _num = num;
         
         if (!rebuild)
@@ -147,13 +147,13 @@ public class Deck : Stack
             {
                 if (end == Const.TOP)
                 {
-                    card = Cards[0];
-                    Cards.RemoveAt(0);
+                    card = Cards[Size - 1];
+                    Cards.RemoveAt(Size - 1);
                 }
                 else
                 {
-                    card = Cards[Size - 1];
-                    Cards.RemoveAt(Size - 1);
+                    card = Cards[0];
+                    Cards.RemoveAt(0);
                 }
 
                 dealtCards[n] = card;
@@ -180,7 +180,7 @@ public class Deck : Stack
             }     
         }
         
-        return new Stack(cards: dealtCards);
+        return new Stack(cards: dealtCards.ToList());
     }
 
     //===============================================================================

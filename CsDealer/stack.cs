@@ -217,8 +217,8 @@ public class Stack
         
         for (int i = 0; i < Cards.Count; i++)
         {
-            sb.Append($"{Cards[i].value} {Cards[i].suit}");
-            
+            sb.Append($"{Cards[i].name}");
+
             if (i != Cards.Count - 1)
             {
                 sb.Append(Environment.NewLine);
