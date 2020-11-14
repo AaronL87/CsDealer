@@ -289,9 +289,19 @@ public class Stack
             throw new System.ArgumentException("The 'num' parameter must be >= 1.");
         }
         
-        List<Card> dealtCards = new List<Card>();
+        Card[] dealtCards;
         int size = Size;
         Card card;
+
+        if (num <= size)
+        {
+            dealtCards = new Card[num];
+        }
+        else
+        {
+            num = size;
+            dealtCards = new Card[size];
+        }
 
         if (size != 0)
         {
@@ -301,16 +311,16 @@ public class Stack
                 {
                     if (end == Const.TOP)
                     {
-                        card = Cards[0];
-                        Cards.RemoveAt(0);
-                    }
-                    else
-                    {
                         card = Cards[size - 1];
                         Cards.RemoveAt(size - 1);
                     }
+                    else
+                    {
+                        card = Cards[0];
+                        Cards.RemoveAt(0);
+                    }
                     
-                    dealtCards.Add(card);
+                    dealtCards[n] = card;
                 }
                 catch (System.IndexOutOfRangeException)
                 {
@@ -318,7 +328,7 @@ public class Stack
                 }     
             }
         
-            return new Stack(cards: dealtCards);
+            return new Stack(cards: dealtCards.ToList());
         }
         else
         {

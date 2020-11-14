@@ -123,8 +123,9 @@ public class Deck : Stack
             throw new System.ArgumentException("The 'num' parameter must be >= 1.");
         }
         
-        Card[] dealtCards = new Card[num];
+        Card[] dealtCards;
         int _num = num;
+        int size = Size;
         
         if (!rebuild)
         {
@@ -134,6 +135,15 @@ public class Deck : Stack
         if (!shuffle)
         {
             shuffle = this.reshuffle;
+        }
+
+        if (rebuild || num <= size)
+        {
+            dealtCards = new Card[num];
+        }
+        else
+        {
+            dealtCards = new Card[size];
         }
 
         Card card;
