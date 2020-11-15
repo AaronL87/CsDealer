@@ -211,7 +211,7 @@ public class Stack
     }
 
 
-    public string Str()
+    public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
         
