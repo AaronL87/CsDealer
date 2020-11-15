@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 public class Deck : Stack
 {
@@ -93,7 +94,23 @@ public class Deck : Stack
 
     public new string Repr()
     {
-        return $"Deck(cards={Cards})";
+        StringBuilder sb = new StringBuilder();
+        
+        sb.Append("Deck(cards=[");
+
+        for (int i = 0; i < Cards.Count; i++)
+        {
+            sb.Append($"{Cards[i].Repr()}");
+
+            if (i != Cards.Count - 1)
+            {
+                sb.Append(", ");
+            }
+        }
+
+        sb.Append("])");
+        
+        return sb.ToString();
     }
 
 
