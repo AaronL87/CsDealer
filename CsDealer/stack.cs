@@ -94,7 +94,7 @@ public class Stack
     }
     
 
-    public void Del(int index) // In place of Python's Del
+    public void Remove(int index) // In place of Python's Del
     {
         if (index < 0)
         {
@@ -207,7 +207,23 @@ public class Stack
 
     public string Repr()
     {
-        return $"Stack(cards={Cards})";
+        StringBuilder sb = new StringBuilder();
+        
+        sb.Append("Stack(cards=[");
+
+        for (int i = 0; i < Cards.Count; i++)
+        {
+            sb.Append($"{Cards[i].Repr()}");
+
+            if (i != Cards.Count - 1)
+            {
+                sb.Append(", ");
+            }
+        }
+
+        sb.Append("])");
+        
+        return sb.ToString();
     }
 
 
