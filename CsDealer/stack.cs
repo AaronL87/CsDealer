@@ -254,11 +254,11 @@ public class Stack
         {
             if (end == Const.TOP) // Used == not 'is'
             {
-                Cards.Insert(0, (Card)cards); // Flipped TOP and BOTTOM from PyDealer
+                Cards.Add((Card)cards);
             }
             else if (end == Const.BOTTOM)
             {
-                Cards.Add((Card)cards);
+                Cards.Insert(0, (Card)cards);
             }
             else
             {
@@ -338,7 +338,7 @@ public class Stack
                     
                     dealtCards[n] = card;
                 }
-                catch (System.IndexOutOfRangeException)
+                catch (System.ArgumentOutOfRangeException)
                 {
                     break;
                 }     
