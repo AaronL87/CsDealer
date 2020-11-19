@@ -186,7 +186,7 @@ public class Deck : Stack
                 dealtCards[n] = card;
                 num -= 1;
             }
-            catch (System.IndexOutOfRangeException)
+            catch (System.ArgumentOutOfRangeException)
             {
                 if (Size == 0)
                 {
