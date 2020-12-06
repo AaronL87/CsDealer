@@ -566,8 +566,8 @@ public class Stack
     }
     
     
-    public Tuple<List<Card>,List<Card>> GetList(List<object> terms, int limit = 0, 
-        bool sort = false, Dictionary<string, Dictionary<string, int>> ranks = null)
+    public List<Card> GetList(List<object> terms, int limit = 0, bool sort = false, 
+        Dictionary<string, Dictionary<string, int>> ranks = null)
     // Has additional functionality that terms list can be mixed with indicies and card descriptions
     {
         List<Card> cards = Cards;
@@ -643,7 +643,8 @@ public class Stack
             gotCards = Tools.SortCards(gotCards, ranks);
         }
 
-        return Tuple.Create(remainingCards, gotCards);
+        Cards = remainingCards;
+        return gotCards;
     }
 
 
