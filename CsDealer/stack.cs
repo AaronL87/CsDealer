@@ -544,12 +544,13 @@ public class Stack
             for (int i = 0; i < cards.Count; i++)
             {
                 if (count < limit)
-                    
+                {
                     if (Tools.CheckTerm(cards[i], term))
                     {
                         foundIndicies.Add(i);
                         count += 1;
                     }
+                }
                 else
                 {
                     break;
