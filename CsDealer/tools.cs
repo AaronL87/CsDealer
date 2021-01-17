@@ -9,7 +9,7 @@ public class Tools
     //===============================================================================
 
     public static List<Card> BuildCards(bool jokers = false, int numJokers = 0)
-    {        
+    {
         List<Card> newDeck = new List<Card>();
 
         if (jokers)
@@ -32,12 +32,12 @@ public class Tools
     }
 
 
-    public static bool CheckSorted(List<Card> cards, 
+    public static bool CheckSorted(List<Card> cards,
         Dictionary<string, Dictionary<string, int>> ranks = null)
-    {   
+    {
         if (ranks == null)
         {
-            ranks = Const.DEFAULT_RANKS;   
+            ranks = Const.DEFAULT_RANKS;
         }
 
         List<Card> sortedCards = SortCards(cards, ranks);
@@ -58,7 +58,7 @@ public class Tools
 
 
     public static bool CheckTerm<T>(Card card, T term)
-    {   
+    {
         List<T> checkList = new List<T>();
 
         if (term is string)
@@ -66,18 +66,18 @@ public class Tools
             string[] checkParts = new string[] {card.name, card.suit,
                                                 card.value, card.abbrev};
             checkParts = Array.ConvertAll(checkParts, t => t.ToLower());
-            
+
             string castedTerm = (string)(object)term;
             castedTerm = castedTerm.ToLower();
             term = (T)Convert.ChangeType(castedTerm, typeof(T));
-            
+
             checkList = checkParts.Cast<T>().ToList();
         }
         else if (term is char)
         {
-            char[] checkParts = new char[] {card.suit[0], card.value[0]};
+            char[] checkParts = new char[] { card.suit[0], card.value[0] };
             checkParts = Array.ConvertAll(checkParts, t => char.ToLower(t));
-            
+
             char castedTerm = (char)(object)term;
             castedTerm = char.ToLower(castedTerm);
             term = (T)Convert.ChangeType(castedTerm, typeof(T));
@@ -144,7 +144,7 @@ public class Tools
         {
             throw new ArgumentException($"The term {term} is not of type string or char.");
         }
-        
+
         if (limit == 0)
         {
             for (int i = 0; i < cards.Count; i++)
@@ -166,10 +166,10 @@ public class Tools
                         foundIndicies.Add(i);
                         count += 1;
                     }
-                }
-                else
-                {
-                    break;
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -209,9 +209,9 @@ public class Tools
                     throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
                         + " is not of type string or char.");
                 }
-                
+
                 for (int i = 0; i < cards.Count; i++)
-                {   
+                {
                     if (CheckTerm(cards[i], term))
                     {
                         foundIndicies.Add(i);
@@ -224,7 +224,7 @@ public class Tools
             for (int t = 0; t < terms.Count; t++)
             {
                 term = terms[t];
-            
+
                 if (term is string)
                 {
                     term = (string)term;
@@ -238,9 +238,9 @@ public class Tools
                     throw new ArgumentException($"The term '{term}' in the {t} index in 'terms' list"
                         + " is not of type string or char.");
                 }
-                
+
                 for (int i = 0; i < cards.Count; i++)
-                { 
+                {
                     if (count < limit)
                     {
                         if (CheckTerm(cards[i], term))
@@ -248,13 +248,13 @@ public class Tools
                             foundIndicies.Add(i);
                             count += 1;
                         }
-                    }    
+                    }
                     else
                     {
                         break;
                     }
                 }
-            
+
                 count = 0;
             }
         }
@@ -268,7 +268,7 @@ public class Tools
     }
 
 
-    public static Tuple<List<Card>,List<Card>> GetCard(List<Card> cards, object term, 
+    public static Tuple<List<Card>, List<Card>> GetCard(List<Card> cards, object term,
         int limit = 0, bool sort = false, Dictionary<string, Dictionary<string, int>> ranks = null)
     {
         List<Card> gotCards = new List<Card>();
@@ -321,7 +321,7 @@ public class Tools
     }
 
 
-    public static Tuple<List<Card>,List<Card>> GetList(List<Card> cards, List<object> terms, 
+    public static Tuple<List<Card>, List<Card>> GetList(List<Card> cards, List<object> terms,
         int limit = 0, bool sort = false, Dictionary<string, Dictionary<string, int>> ranks = null)
     // Has additional functionality that terms list can be mixed with indicies and card descriptions
     {
@@ -335,16 +335,16 @@ public class Tools
         for (int t = 0; t < terms.Count; t++)
         {
             term = terms[t];
-            
+
             if (term is int)
             {
                 int index = (int)term;
-                
+
                 if (index < 0)
                 {
                     index += cards.Count;
                 }
-                
+
                 if (allIndices.Contains(index))
                 {
                     continue;
@@ -357,14 +357,14 @@ public class Tools
             {
                 indices = Find(cards, term, limit: limit);
                 tempIndices.Clear();
-                
+
                 foreach (int index in indices)
-                {                            
+                {
                     if (allIndices.Contains(index))
                     {
                         continue;
                     }
-                    
+
                     tempIndices.Add(index);
                 }
 
@@ -377,7 +377,7 @@ public class Tools
             }
             else
             {
-                throw new ArgumentException($"The term '{term}' in index {t} is not of type string," 
+                throw new ArgumentException($"The term '{term}' in index {t} is not of type string,"
                     + " char, or int.");
             }
         }
@@ -414,9 +414,9 @@ public class Tools
         {
             string line;
 
-            while((line = file.ReadLine()) != null)  
+            while ((line = file.ReadLine()) != null)
             {
-                cardData.Add(line); 
+                cardData.Add(line);
             }
         }
 
@@ -429,12 +429,12 @@ public class Tools
             cards[i] = new Card(card[0], card[1]);
         }
 
-        return cards; 
+        return cards;
     }
 
 
     private static Random random = new Random();
-    
+
     public static Card RandomCard(List<Card> cards, bool remove_ = false)
     {
         if (!remove_)
@@ -453,19 +453,19 @@ public class Tools
 
 
     public static void SaveCards(List<Card> cards, string filename = null)
-    {        
+    {
         if (filename == null)
         {
             filename = $"cards-{DateTime.Now.ToString("yyyyMMdd")}.txt";
         }
 
         string cardReprs;
-        List<string> cardReprsList = new List<string>(); 
+        List<string> cardReprsList = new List<string>();
 
         for (int i = 0; i < cards.Count; i++)
         {
             cardReprs = $"{cards[i].value} {cards[i].suit}";
-            
+
             if (i != cards.Count - 1)
             {
                 cardReprs += Environment.NewLine;
@@ -484,19 +484,19 @@ public class Tools
     }
 
 
-    public static List<int> SortCardIndicies(List<Card> cards, List<int> indices, 
+    public static List<int> SortCardIndicies(List<Card> cards, List<int> indices,
         Dictionary<string, Dictionary<string, int>> ranks = null)
     {
         if (ranks == null)
         {
-            ranks = Const.DEFAULT_RANKS;   
+            ranks = Const.DEFAULT_RANKS;
         }
 
         if (ranks.ContainsKey("suits"))
         {
             indices.OrderBy(x => cards[x].suit != null ? ranks["suits"][cards[x].suit] : 0);
         }
-        
+
         if (ranks.ContainsKey("values"))
         {
             indices.OrderBy(x => ranks["values"][cards[x].value]);
@@ -506,19 +506,19 @@ public class Tools
     }
 
 
-    public static List<Card> SortCards(List<Card> cards, 
+    public static List<Card> SortCards(List<Card> cards,
         Dictionary<string, Dictionary<string, int>> ranks = null)
-    {   
+    {
         if (ranks == null)
         {
-            ranks = Const.DEFAULT_RANKS;   
+            ranks = Const.DEFAULT_RANKS;
         }
 
         if (ranks.ContainsKey("suits"))
         {
             cards.OrderBy(x => x != null ? ranks["suits"][x.suit] : 0);
         }
-        
+
         if (ranks.ContainsKey("values"))
         {
             cards.OrderBy(x => ranks["values"][x.value]);
