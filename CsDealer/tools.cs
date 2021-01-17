@@ -166,10 +166,10 @@ public class Tools
                         foundIndicies.Add(i);
                         count += 1;
                     }
-                    else
-                    {
-                        break;
-                    }
+                }
+                else
+                {
+                    break;
                 }
             }
         }
