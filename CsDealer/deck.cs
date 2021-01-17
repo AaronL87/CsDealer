@@ -8,7 +8,7 @@ public class Deck : Stack
     //===============================================================================
     // Deck Class
     //===============================================================================
- 
+
     private List<Card> _cards;
     public bool jokers;
     public int numJokers;
@@ -17,8 +17,8 @@ public class Deck : Stack
     public bool reshuffle;
     public new Dictionary<string, Dictionary<string, int>> ranks;
     public int decksUsed;
-    
-    public Deck(List<Card> cards = null, bool jokers = false, int numJokers = 0, 
+
+    public Deck(List<Card> cards = null, bool jokers = false, int numJokers = 0,
         bool build = true, bool rebuild = false, bool reshuffle = false,
         Dictionary<string, Dictionary<string, int>> ranks = null)
     {
@@ -26,12 +26,12 @@ public class Deck : Stack
         {
             cards = new List<Card>();
         }
-        
+
         if (ranks == null)
         {
             ranks = Const.DEFAULT_RANKS;
         }
-        
+
         this._cards = cards;
         this.jokers = jokers;
         this.numJokers = numJokers;
@@ -43,7 +43,7 @@ public class Deck : Stack
         if (build)
         {
             Build();
-        } 
+        }
     }
 
 
@@ -54,32 +54,32 @@ public class Deck : Stack
         if (other.GetType() == typeof(Stack))
         {
             List<Card> cardList = new List<Card>();
-            
+
             cardList.AddRange(deck.Cards);
-            
+
             cardList.AddRange(((Stack)other).Cards);
-            
+
             newDeck = new Deck(cards: cardList);
         }
         else if (other.GetType() == typeof(Deck))
         {
             List<Card> cardList = new List<Card>();
-            
+
             cardList.AddRange(deck.Cards);
-            
+
             cardList.AddRange(((Deck)other).Cards);
-            
+
             newDeck = new Deck(cards: cardList);
         }
         else if (other is List<Card>)
         {
             List<Card> cardList = new List<Card>();
-            
+
             cardList.AddRange(deck.Cards);
-            
+
             List<Card> otherCards = other as List<Card>;
             cardList.AddRange(otherCards);
-            
+
             newDeck = new Deck(cards: cardList);
         }
         else
@@ -87,7 +87,7 @@ public class Deck : Stack
             throw new System.ArgumentException("Object on the right side of '+' must be of"
                 + " type Stack or Deck or be a list of Card instances");
         }
-        
+
         return newDeck;
     }
 
@@ -95,7 +95,7 @@ public class Deck : Stack
     public new string Repr()
     {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.Append("Deck(cards=[");
 
         for (int i = 0; i < Cards.Count; i++)
@@ -109,7 +109,7 @@ public class Deck : Stack
         }
 
         sb.Append("])");
-        
+
         return sb.ToString();
     }
 
@@ -132,18 +132,18 @@ public class Deck : Stack
     }
 
 
-    public Stack Deal(int num = 1, bool rebuild = false, bool shuffle = false, 
+    public Stack Deal(int num = 1, bool rebuild = false, bool shuffle = false,
         string end = Const.TOP)
     {
         if (num <= 0)
         {
             throw new System.ArgumentException("The 'num' parameter must be >= 1.");
         }
-        
+
         Card[] dealtCards;
         int _num = num;
         int size = Size;
-        
+
         if (!rebuild)
         {
             rebuild = this.rebuild;
@@ -193,7 +193,7 @@ public class Deck : Stack
                     if (rebuild)
                     {
                         Build();
-                        
+
                         if (shuffle)
                         {
                             Shuffle();
@@ -204,16 +204,16 @@ public class Deck : Stack
                 {
                     break;
                 }
-            }     
+            }
         }
-        
+
         return new Stack(cards: dealtCards.ToList());
     }
 
     //===============================================================================
     // Helper Functions
     //===============================================================================
-    
+
     public static Deck ConvertToDeck(Stack stack)
     {
         List<Card> cardStack = stack.Cards;
